@@ -19,6 +19,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* ── Entry animations ── */
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -29,17 +30,13 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+.animate-fade-in  { animation: fade-in  0.45s ease-out both; }
+.animate-slide-up { animation: slide-up 0.45s ease-out both; }
+
+/* ── Skeleton shimmer ── */
 @keyframes shimmer {
   0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.45s ease-out both;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.45s ease-out both;
+  100% { background-position:  400px 0; }
 }
 
 .skeleton {
@@ -47,4 +44,56 @@ body {
   background-size: 800px 100%;
   animation: shimmer 1.4s infinite linear;
   border-radius: 6px;
+}
+
+/* ── Background orbs ── */
+@keyframes orb-1 {
+  0%, 100% { transform: translate(0, 0)    scale(1);    }
+  50%      { transform: translate(-60px, 40px) scale(1.08); }
+}
+
+@keyframes orb-2 {
+  0%, 100% { transform: translate(0, 0)    scale(1);    }
+  50%      { transform: translate(50px, -55px) scale(0.92); }
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.orb-1 {
+  width: 620px;
+  height: 620px;
+  background: radial-gradient(circle, #6366f1, #a855f7);
+  top: -220px;
+  right: -120px;
+  animation: orb-1 14s ease-in-out infinite;
+}
+
+.orb-2 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, #06b6d4, #3b82f6);
+  bottom: -160px;
+  left: -120px;
+  animation: orb-2 18s ease-in-out infinite;
+}
+
+/* ── Perspective grid ── */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+
+/* ── 3-D card tilt ── */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+  will-change: transform;
 }
