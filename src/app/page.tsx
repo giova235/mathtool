@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { TOPICS, TOPIC_KEYS } from "../lib/topics";
 import { ConicDiagram } from "../components/ConicDiagram";
+import { ProblemGraph, EquationParams } from "../components/ProblemGraph";
 
 type AppMode = "practice" | "diagnostic";
 type DiagState = "idle" | "loading" | "quiz" | "results";
@@ -35,6 +36,7 @@ export default function Home() {
   const [difficulty, setDifficulty] = useState("medio");
   const [weakSubtopics, setWeakSubtopics] = useState<string[]>([]);
   const [practiceMode, setPracticeMode] = useState<"free" | "targeted">("free");
+  const [equation, setEquation] = useState<EquationParams | null>(null);
 
   // Mode
   const [appMode, setAppMode] = useState<AppMode>("practice");
@@ -46,8 +48,6 @@ export default function Home() {
   const [diagIndex, setDiagIndex] = useState(0);
   const [diagShowSolution, setDiagShowSolution] = useState(false);
   const [diagError, setDiagError] = useState("");
-
-  const cardRef = useRef<HTMLElement>(null);
 
   const filteredTopics = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -61,26 +61,10 @@ export default function Home() {
     });
   }, [search]);
 
-  function handleCardMove(e: React.MouseEvent<HTMLElement>) {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `perspective(900px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg)`;
-    card.style.boxShadow = `${-x * 20}px ${-y * 20}px 40px rgba(99,102,241,0.12)`;
-  }
-
-  function handleCardLeave() {
-    const card = cardRef.current;
-    if (!card) return;
-    card.style.transform = "perspective(900px) rotateY(0deg) rotateX(0deg)";
-    card.style.boxShadow = "none";
-  }
-
   async function generateProblem() {
     setLoading(true);
     setProblem("");
+    setEquation(null);
     try {
       const res = await fetch("/api/problem", {
         method: "POST",
@@ -93,6 +77,7 @@ export default function Home() {
       });
       const data = await res.json();
       setProblem(data.problem || "Errore nel generare il problema.");
+      setEquation(data.equation ?? null);
     } catch {
       setProblem("Errore di connessione.");
     }
@@ -282,9 +267,16 @@ export default function Home() {
             )}
 
             {problem && !loading && (
-              <article ref={cardRef} onMouseMove={handleCardMove} onMouseLeave={handleCardLeave} className={`card-3d mt-10 p-8 bg-neutral-900/80 backdrop-blur border border-neutral-800 rounded-2xl animate-fade-in ${PROSE}`}>
-                <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>{problem}</ReactMarkdown>
-              </article>
+              <>
+                {equation && (
+                  <div className="mt-10 bg-neutral-900/80 backdrop-blur border border-neutral-800 rounded-2xl overflow-hidden animate-fade-in" style={{ aspectRatio: "1/1", maxWidth: 300 }}>
+                    <ProblemGraph equation={equation} />
+                  </div>
+                )}
+                <article className={`mt-4 p-8 bg-neutral-900/80 backdrop-blur border border-neutral-800 rounded-2xl animate-fade-in ${PROSE}`}>
+                  <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>{problem}</ReactMarkdown>
+                </article>
+              </>
             )}
           </>
         )}
