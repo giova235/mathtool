@@ -6,6 +6,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { TOPICS, TOPIC_KEYS } from "../lib/topics";
+import { ConicDiagram } from "../components/ConicDiagram";
 
 type AppMode = "practice" | "diagnostic";
 type DiagState = "idle" | "loading" | "quiz" | "results";
@@ -239,6 +240,8 @@ export default function Home() {
                 ))}
               </div>
             </div>
+
+            <ConicDiagram topic={selectedTopic} />
 
             <div className="animate-slide-up mb-8" style={{ animationDelay: "0.12s" }}>
               <p className="text-xs text-neutral-500 uppercase tracking-widest mb-3">Difficoltà</p>
