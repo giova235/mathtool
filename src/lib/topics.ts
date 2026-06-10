@@ -29,6 +29,41 @@ export const TOPICS: Record<string, TopicDef> = {
 
 export const TOPIC_KEYS = Object.keys(TOPICS);
 
+export const SUBTOPICS: Record<string, string[]> = {
+  ellisse: [
+    "fuochi e vertici",
+    "eccentricità",
+    "rette tangenti",
+    "intersezioni con rette",
+    "equazione da condizioni geometriche",
+    "distanza dai fuochi",
+  ],
+  iperbole: [
+    "fuochi e vertici",
+    "asintoti",
+    "eccentricità",
+    "rette tangenti",
+    "intersezioni con rette",
+    "iperbole equilatera",
+  ],
+  parabola: [
+    "vertice e fuoco",
+    "direttrice e asse di simmetria",
+    "rette tangenti",
+    "intersezioni con rette",
+    "equazione da condizioni geometriche",
+    "problemi misti vertice-fuoco-retta",
+  ],
+  circonferenza: [
+    "centro e raggio dall'equazione",
+    "rette tangenti da punto esterno",
+    "intersezioni con rette",
+    "condizioni di tangenza",
+    "equazione da tre punti",
+    "posizione reciproca di due circonferenze",
+  ],
+};
+
 export function searchTopic(query: string): string {
   const q = query.toLowerCase().trim();
   if (!q) return "mix";

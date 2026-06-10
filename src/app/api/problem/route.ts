@@ -24,16 +24,19 @@ FORMATO:
 
 export async function POST(request: Request) {
   try {
-    const { difficulty, topic } = await request.json();
+    const { difficulty, topic, weakSubtopics } = await request.json();
     const resolvedTopic =
       topic === "mix" || !TOPIC_KEYS.includes(topic)
         ? TOPIC_KEYS[Math.floor(Math.random() * TOPIC_KEYS.length)]
         : topic;
 
-    const userMessage = `Genera un problema su "${resolvedTopic}", livello ${difficulty || "medio"}. Varia il tipo di problema.`;
+    const userMessage =
+      weakSubtopics && weakSubtopics.length > 0
+        ? `Genera un problema su "${resolvedTopic}" che testa SPECIFICAMENTE queste aree: ${weakSubtopics.join(", ")}. Livello ${difficulty || "medio"}. Varia il tipo di problema.`
+        : `Genera un problema su "${resolvedTopic}", livello ${difficulty || "medio"}. Varia il tipo di problema.`;
 
     const response = await client.messages.create({
-      model: "claude-sonnet-4-5",
+      model: "claude-sonnet-4-6",
       max_tokens: 2000,
       system: SYSTEM_PROMPT(resolvedTopic),
       messages: [{ role: "user", content: userMessage }],
