@@ -178,7 +178,7 @@ export default function Home() {
             </div>
             <h1 className="text-3xl font-bold tracking-tight">MathTool</h1>
           </div>
-          <p className="text-neutral-500 text-sm ml-12">Preparati alla verifica — terzo liceo scientifico</p>
+          <p className="text-neutral-500 text-sm ml-12">Preparati alla verifica</p>
         </header>
 
         {/* Mode tabs */}
